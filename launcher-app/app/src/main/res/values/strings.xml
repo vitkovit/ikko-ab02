@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="acc_desc">Lets the launcher open IKKO\'s control panel and switch ANC / Ambient / Standard, and read the earbuds\' battery.</string>
+</resources>

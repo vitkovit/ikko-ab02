@@ -1,0 +1,31 @@
+# --- Build / IDE ---
+build/
+.gradle/
+.idea/
+*.iml
+local.properties
+.DS_Store
+captures/
+*.hprof
+
+# --- Secrets / signing (NEVER commit) ---
+*.keystore
+*.jks
+*.p12
+key.properties
+keystore.properties
+
+# --- Binaries we don't redistribute ---
+*.apk
+*.aab
+*.dex
+# Proprietary stock IKKO native lib for ANC/earbud serial control — see NOTICE.md
+*.so
+
+# --- Proprietary fonts (Nothing / Colophon Ndot57, NType82; OffBit) — see FONTS.md ---
+*.otf
+*.ttf
+
+# --- Personal data (must never appear here) ---
+*.vcf
+contacts*.csv

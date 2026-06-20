@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Claude-style sunburst: spokes radiating from center, in the safe zone -->
+    <group
+        android:scaleX="0.5"
+        android:scaleY="0.5"
+        android:pivotX="54"
+        android:pivotY="54">
+        <path android:fillColor="#FFFFFF"
+            android:pathData="M54,4 L60,40 L54,54 L48,40 Z" />
+        <path android:fillColor="#FFFFFF"
+            android:pathData="M104,54 L68,60 L54,54 L68,48 Z" />
+        <path android:fillColor="#FFFFFF"
+            android:pathData="M54,104 L48,68 L54,54 L60,68 Z" />
+        <path android:fillColor="#FFFFFF"
+            android:pathData="M4,54 L40,48 L54,54 L40,60 Z" />
+        <path android:fillColor="#FFFFFF"
+            android:pathData="M89,19 L64,46 L54,54 L62,44 Z" />
+        <path android:fillColor="#FFFFFF"
+            android:pathData="M89,89 L62,64 L54,54 L64,62 Z" />
+        <path android:fillColor="#FFFFFF"
+            android:pathData="M19,89 L44,62 L54,54 L46,64 Z" />
+        <path android:fillColor="#FFFFFF"
+            android:pathData="M19,19 L46,44 L54,54 L44,46 Z" />
+    </group>
+</vector>

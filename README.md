@@ -27,12 +27,18 @@ Third-party pieces (microG, YouTube, YouTube Music, Organic Maps, Gboard) are **
 see [`SETUP.md`](SETUP.md) for exactly how.
 
 ## Screenshots
-*(Shown with an OFL dot-matrix font — the original Nothing fonts are not redistributable; see
-[`FONTS.md`](FONTS.md).)*
+
+The launcher in motion — the right-edge rail switching **Volume → Brightness → Media** and a long Wi-Fi name
+marquee-scrolling (stats faked; no real network/contacts shown):
+
+<p align="center"><img src="docs/images/home.gif" width="280" alt="launcher demo"></p>
 
 | Home | Focus timer | Dialer |
 |------|-------------|--------|
 | ![home](docs/images/home.png) | ![focus](docs/images/focus.png) | ![dialer](docs/images/dialer.png) |
+
+*(Shown with an OFL dot-matrix font — the original Nothing fonts are not redistributable; see
+[`FONTS.md`](FONTS.md). Corners rounded to match the device's physical screen.)*
 
 ## Quick start
 

@@ -70,8 +70,9 @@ public class MainActivity extends Activity implements ControlWidget.Host {
     private static final String SELF_PKG = "com.mw.launcher";
 
     private static final int MAX_BAR     = 4;
-    private static final int CLOCK_SP    = 108;
-    private static final int CLOCK_MAXW_CLEAR = 266;  // clock max width when no alerts (grows to fit)
+    private static final int CLOCK_SP    = 150;  // autosize CEILING — high so the clock grows to FILL the
+                                                 // current maxWidth (clear vs alert), capped to avoid overflow
+    private static final int CLOCK_MAXW_CLEAR = 282;  // clock max width when no alerts (grows to fit)
     private static final int CLOCK_MAXW_ALERT = 224;  // shrunk to clear the right-side alert column
     private static final int DATE_SP     = 30;
     private static final int BAR_ICON_DP = 70;

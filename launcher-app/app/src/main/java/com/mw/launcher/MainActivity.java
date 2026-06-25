@@ -72,7 +72,7 @@ public class MainActivity extends Activity implements ControlWidget.Host {
     private static final int MAX_BAR     = 4;
     private static final int CLOCK_SP    = 150;  // autosize CEILING — high so the clock grows to FILL the
                                                  // current maxWidth (clear vs alert), capped to avoid overflow
-    private static final int CLOCK_MAXW_CLEAR = 282;  // clock max width when no alerts (grows to fit)
+    private static final int CLOCK_MAXW_CLEAR = 328;  // clock max width when no alerts (grows to fit)
     private static final int CLOCK_MAXW_ALERT = 224;  // shrunk to clear the right-side alert column
     private static final int DATE_SP     = 30;
     private static final int BAR_ICON_DP = 70;
@@ -137,6 +137,7 @@ public class MainActivity extends Activity implements ControlWidget.Host {
 
         refreshBar();
         updateClock();
+        KeepRadiosService.start(this);   // keep SIM/modem + Bluetooth alive (see RadioGuard)
     }
 
     private Typeface loadFont(String asset) {
@@ -185,13 +186,12 @@ public class MainActivity extends Activity implements ControlWidget.Host {
         clock.setGravity(Gravity.START);
         clock.setMaxLines(1);
         clock.setIncludeFontPadding(false);   // trim the dot-font's tall line metrics
-        clock.setTextSize(TypedValue.COMPLEX_UNIT_SP, CLOCK_SP);
-        // Clock width is dynamic (see refreshAlerts): full when there are no alerts, shrunk to make room
-        // for the right-side alert column when a missed-call / unread badge is showing. Start full.
         clock.setMaxWidth(dp(CLOCK_MAXW_CLEAR));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            clock.setAutoSizeTextTypeUniformWithConfiguration(64, CLOCK_SP, 2, TypedValue.COMPLEX_UNIT_SP);
-        }
+        // FIXED size computed from the widest possible time string (see setClockSizeForWidth). NOT
+        // autosize: offbit is a proportional dot font, so autosizing-to-fill made the clock grow/shrink
+        // depending on which digits were showing (11:11 big, 08:48 small). Sizing to the worst case keeps
+        // every minute identical; it only changes when the alert column toggles the available width.
+        setClockSizeForWidth(CLOCK_MAXW_CLEAR);
         LinearLayout.LayoutParams clkLp = new LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         clkLp.bottomMargin = -dp(21);   // drop most of the dot-font descent (tuned for dead-centre)
@@ -617,9 +617,32 @@ public class MainActivity extends Activity implements ControlWidget.Host {
         }
         // grow the clock when nothing is pending; shrink it to make room for the alert column otherwise
         if (clock != null) {
-            int want = dp((missedCalls > 0 || unreadSms > 0) ? CLOCK_MAXW_ALERT : CLOCK_MAXW_CLEAR);
-            if (clock.getMaxWidth() != want) clock.setMaxWidth(want);
+            int wantDp = (missedCalls > 0 || unreadSms > 0) ? CLOCK_MAXW_ALERT : CLOCK_MAXW_CLEAR;
+            int want = dp(wantDp);
+            if (clock.getMaxWidth() != want) {
+                clock.setMaxWidth(want);
+                setClockSizeForWidth(wantDp);   // re-fit to the new width (constant per alert-state)
+            }
         }
+    }
+
+    /**
+     * Pick a fixed clock text size so the WIDEST possible time string just fits maxWidthDp. Because the
+     * reference is the worst-case width (widest digit x4 + colon), the chosen size never depends on which
+     * minute is actually showing — so the clock no longer shrinks/grows as the digits change.
+     */
+    private void setClockSizeForWidth(int maxWidthDp) {
+        if (clock == null) return;
+        Paint tp = new Paint(Paint.ANTI_ALIAS_FLAG);
+        tp.setTypeface(clockFont);
+        final float probe = 100f;
+        tp.setTextSize(probe);
+        float widestDigit = 0f;
+        for (char d = '0'; d <= '9'; d++) widestDigit = Math.max(widestDigit, tp.measureText(String.valueOf(d)));
+        float worstPx = widestDigit * 4 + tp.measureText(":");
+        float sizePx = probe * (dp(maxWidthDp) / worstPx);
+        float ceilPx = CLOCK_SP * getResources().getDisplayMetrics().scaledDensity;
+        clock.setTextSize(TypedValue.COMPLEX_UNIT_PX, Math.min(sizePx, ceilPx));
     }
 
     private int countQuery(Uri uri, String selection) {
